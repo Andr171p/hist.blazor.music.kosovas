@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using MusicServerApp.Data.Intarfaces;
 using MusicServerApp.Data.models;
 
 namespace MusicServerApp.Data.Services
 {
-	public class PlaylistService
+	public class PlaylistService : IPlaylistService
 	{
 		private readonly ApplicationDbContext _context;
 
@@ -15,6 +16,11 @@ namespace MusicServerApp.Data.Services
 		public async Task<IEnumerable<Playlist>> GetAllPlaylistsAsync()
 		{
 			return await _context.Playlists.ToListAsync();
+		}
+
+		public async Task<Playlist?> GetByIdAsync(int id)
+		{
+			return await _context.Playlists.FirstAsync(x => x.Id == id);
 		}
 
 		public async Task<Playlist> CreatePlaylistAsync(Playlist playlist)

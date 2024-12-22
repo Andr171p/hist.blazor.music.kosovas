@@ -35,5 +35,26 @@ namespace MusicServerApp.Data.Services
 			await _context.SaveChangesAsync();
 			return true;
 		}
+
+		public async Task<bool> RemoveTrackFromPlaylistAsync(int playlistId, int trackId)
+		{
+			var playlist = await _context.Playlists.Include(p => p.Tracks).FirstOrDefaultAsync(p => p.Id == playlistId);
+
+			if (playlist == null)
+			{
+				return false;
+			}
+
+			var trackToRemove = playlist.Tracks.FirstOrDefault(t => t.Id == trackId);
+
+			if (trackToRemove != null)
+			{
+				playlist.Tracks.Remove(trackToRemove);
+				await _context.SaveChangesAsync();
+				return true;
+			}
+
+			return false;
+		}
 	}
 }

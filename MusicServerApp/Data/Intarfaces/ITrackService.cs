@@ -7,5 +7,6 @@ namespace MusicServerApp.Data.Intarfaces
 		Task<IEnumerable<Track>> GetAllTracksAsync();
 		Task<Track> CreateTrackAsync(Track track);
 		Task<bool> DeleteTrackAsync(int id);
+		Task<bool> RemoveTrackFromPlaylistAsync(int playlistId, int trackId);
 	}
 }

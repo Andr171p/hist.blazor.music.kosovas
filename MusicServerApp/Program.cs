@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using MusicServerApp.Components;
 using MusicServerApp.Components.Account;
 using MusicServerApp.Data;
+using MusicServerApp.Data.Intarfaces;
+using MusicServerApp.Data.Services;
 
 namespace MusicServerApp
 {
@@ -41,10 +43,14 @@ namespace MusicServerApp
 
             builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
-            var app = builder.Build();
+			builder.Services.AddScoped<IArtistService, ArtistService>();
+			builder.Services.AddScoped<IPlaylistService, PlaylistService>();
+			builder.Services.AddScoped<ITrackService, TrackService>();
 
-            // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+			var app = builder.Build();
+
+			// Configure the HTTP request pipeline.
+			if (app.Environment.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();
             }

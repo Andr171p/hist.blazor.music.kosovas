@@ -1,0 +1,27 @@
+﻿@page "/create-artist"
+@inject IArtistService ArtistService
+@inject NavigationManager NavigationManager
+
+<h1>Добавление исполнителя</h1>
+
+<EditForm Model="@newArtist" OnValidSubmit="@HandleValidSubmit" @formname="createArtistForm">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label for="name">Имя артиста:</label>
+        <InputText id="name" @bind-Value="newArtist.Name" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Создать</button>
+</EditForm>
+
+@code {
+    private Artist newArtist = new Artist();
+
+    private async Task HandleValidSubmit()
+    {
+        await ArtistService.CreateArtistAsync(newArtist);
+        NavigationManager.NavigateTo("/artists");
+    }
+}

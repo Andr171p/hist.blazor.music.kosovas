@@ -1,0 +1,55 @@
+﻿@page "/playlists"
+@inject IPlaylistService service
+@inject NavigationManager navigation
+
+<PageTitle>Playlists</PageTitle>
+
+<h1>Мои плейлисты</h1>
+
+<div class="container">
+    @if (playlists == null)
+    {
+        <p>Загрузка...</p>
+    }
+    else
+    {
+        <div class="btn-group m-2">
+            <button class="btn btn-primary" @onclick="AddPlaylist">Новый плейлист</button>
+        </div>
+
+        <div class="card-group">
+            @foreach (var playlist in playlists)
+            {
+                <div class="card">
+                    <div class="card-body">
+                        <p>@playlist.Name</p>
+                    </div>
+                    <div class="card-footer">
+                        <a class="btn btn-primary" href="@($"playlists/{playlist.Id}")">Треки</a>
+                        <button class="btn btn-danger" @onclick="() => DeletePlaylist(playlist.Id)">Удалить</button>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    IEnumerable<Playlist>? playlists;
+
+    protected override async Task OnInitializedAsync()
+    {
+        playlists = await service.GetAllPlaylistsAsync();
+    }
+
+    void AddPlaylist()
+    {
+        navigation.NavigateTo("/playlists/add");
+    }
+
+    async Task DeletePlaylist(int id)
+    {
+        await service.DeletePlaylistAsync(id);
+        playlists = await service.GetAllPlaylistsAsync();
+    }
+}

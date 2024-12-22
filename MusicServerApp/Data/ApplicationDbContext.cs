@@ -14,6 +14,8 @@ namespace MusicServerApp.Data
 
 		protected override void OnModelCreating(ModelBuilder builder)
 		{
+			base.OnModelCreating(builder);
+
 			builder.Entity<Artist>()
 			.HasMany(a => a.Tracks)
 			.WithOne(t => t.Artist)
