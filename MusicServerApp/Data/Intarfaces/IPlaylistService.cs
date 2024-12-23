@@ -8,5 +8,7 @@ namespace MusicServerApp.Data.Intarfaces
 		Task<Playlist?> GetByIdAsync(int id);
 		Task<Playlist> CreatePlaylistAsync(Playlist playlist);
 		Task<bool> DeletePlaylistAsync(int id);
+		Task AddTrackToPlaylistAsync(int playlistId, Track track);
+		Task<Playlist?> GetPlaylistWithTracksByIdAsync(int id);
 	}
 }

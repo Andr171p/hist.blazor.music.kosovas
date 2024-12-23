@@ -1,0 +1,57 @@
+﻿@page "/playlists/{id:int}"
+@inject IPlaylistService PlaylistService
+
+@if (Playlist is null)
+{
+    <p>Загрузка...</p>
+}
+else
+{
+    <h1>Плейлист: @Playlist.Name</h1>
+
+    @if (Playlist.Tracks is null || !Playlist.Tracks.Any())
+    {
+        <p>Треков нет.</p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Исполнитель</th>
+                    <th>Жанр</th>
+                    <th>Дата выпуска</th>
+                    <th>Продолжительность</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var track in Playlist.Tracks)
+                {
+                    <tr>
+                        <td>@track.Title</td>
+                        <td>@track.Artist.Name</td>
+                        <td>@track.Genre</td>
+                        <td>@track.ReleaseDate.ToString("d")</td>
+                        <td>@track.Duration</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Playlist? Playlist { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        // Загружаем информацию о плейлисте и его треках
+        Playlist = await PlaylistService.GetPlaylistWithTracksByIdAsync(Id);
+    }
+}
+
+

@@ -56,5 +56,29 @@ namespace MusicServerApp.Data.Services
 
 			return false;
 		}
+
+		public async Task<bool> AddTrackToPlaylistAsync(int playlistId, Track track)
+		{
+			var playlist = await _context.Playlists.Include(p => p.Tracks).FirstOrDefaultAsync(p => p.Id == playlistId);
+
+			if (playlist == null)
+			{
+				return false;
+			}
+
+			if (!playlist.Tracks.Any(t => t.Id == track.Id))
+			{
+				playlist.Tracks.Add(track);
+				await _context.SaveChangesAsync();
+				return true;
+			}
+
+			return false;
+		}
+
+		public async Task<IEnumerable<Track>> GetTracksByArtistIdAsync(int artistId)
+		{
+			return await _context.Tracks.Where(t => t.ArtistId == artistId).ToListAsync();
+		}
 	}
 }

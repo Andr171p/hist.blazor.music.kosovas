@@ -1,0 +1,48 @@
+﻿@page "/artists/{id:int}"
+@inject IArtistService ArtistService
+@inject NavigationManager NavigationManager
+
+<h1>Треки исполнителя "@Artist?.Name"</h1>
+
+@if (Tracks == null)
+{
+    <p><em>Загрузка...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Продолжительность</th>
+                <th>Жанр</th>
+                <th>Дата выпуска</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var track in Tracks)
+            {
+                <tr>
+                    <td>@track.Title</td>
+                    <td>@track.Duration</td>
+                    <td>@track.Genre</td>
+                    <td>@track.ReleaseDate.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    private Artist? Artist { get; set; }
+    private IEnumerable<Track>? Tracks { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Artist = await ArtistService.GetArtistWithTracksByIdAsync(Id);
+        Tracks = Artist?.Tracks;
+    }
+}

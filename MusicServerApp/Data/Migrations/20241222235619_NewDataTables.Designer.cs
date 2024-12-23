@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MusicServerApp.Data;
 
@@ -11,9 +12,11 @@ using MusicServerApp.Data;
 namespace MusicServerApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241222235619_NewDataTables")]
+    partial class NewDataTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -229,7 +232,6 @@ namespace MusicServerApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -329,6 +331,24 @@ namespace MusicServerApp.Migrations
                             Genre = "Nu Metal",
                             ReleaseDate = new DateTime(2000, 10, 24, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Title = "In the End"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            ArtistId = 1,
+                            Duration = new TimeSpan(0, 0, 8, 0, 0),
+                            Genre = "Thrash Metal",
+                            ReleaseDate = new DateTime(1986, 3, 3, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Title = "Master of Puppets"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            ArtistId = 2,
+                            Duration = new TimeSpan(0, 0, 3, 0, 0),
+                            Genre = "Rap Rock",
+                            ReleaseDate = new DateTime(2003, 9, 18, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Title = "Numb"
                         });
                 });
 

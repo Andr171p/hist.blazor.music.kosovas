@@ -1,0 +1,47 @@
+﻿@page "/artists"
+@inject IArtistService ArtistService
+@inject ITrackService TrackService
+
+<h1>Исполнители</h1>
+
+<p>
+    <a href="/tracks/add">Добавить трек</a>
+</p>
+
+@if (Artists == null)
+{
+    <p><em>Загрузка...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Имя</th>
+                <th>Количество треков</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var artist in Artists)
+            {
+                <tr>
+                    <td>@artist.Name</td>
+                    <td>@artist.Tracks.Count</td>
+                    <td>
+                        <a href="/artists/@artist.Id">Просмотреть треки</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private IEnumerable<Artist>? Artists { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Artists = await ArtistService.GetAllArtistsWithTracksAsync();
+    }
+}

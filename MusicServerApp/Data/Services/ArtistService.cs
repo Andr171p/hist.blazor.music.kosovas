@@ -18,6 +18,11 @@ namespace MusicServerApp.Data.Services
 			return await _context.Artists.ToListAsync();
 		}
 
+		public async Task<Artist?> GetArtistByIdAsync(int id)
+		{
+			return await _context.Artists.FirstAsync(x => x.Id == id);
+		}
+
 		public async Task<Artist> CreateArtistAsync(Artist artist)
 		{
 			_context.Artists.Add(artist);
@@ -34,6 +39,19 @@ namespace MusicServerApp.Data.Services
 			_context.Artists.Remove(artist);
 			await _context.SaveChangesAsync();
 			return true;
+		}
+
+		public async Task<IEnumerable<Artist>> GetAllArtistsWithTracksAsync()
+		{
+			return await _context.Artists.Include(a => a.Tracks).ToListAsync();
+		}
+
+		public async Task<Artist?> GetArtistWithTracksByIdAsync(int id)
+		{
+			return await _context.Artists
+				.Where(a => a.Id == id)
+				.Include(a => a.Tracks)
+				.FirstOrDefaultAsync();
 		}
 	}
 }

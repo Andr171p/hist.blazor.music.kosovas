@@ -1,0 +1,72 @@
+﻿@page "/tracks"
+@inject ITrackService TrackService
+@inject IPlaylistService PlaylistService
+
+<h1>Список треков</h1>
+
+@if (Tracks == null || !Tracks.Any())
+{
+    <p><em>Загрузка...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Название</th>
+                <th>Исполнитель</th>
+                <th>Жанр</th>
+                <th>Дата выпуска</th>
+                <th>Продолжительность</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var track in Tracks)
+            {
+                <tr>
+                    <td>@track?.Title</td>
+                    <td>@track?.Artist?.Name</td>
+                    <td>@track?.Genre</td>
+                    <td>@track?.ReleaseDate.ToString("d")</td>
+                    <td>@track?.Duration</td>
+                    <td><button class="btn btn-primary" @onclick="@(() => AddToPlaylist(track))">Добавить в плейлист</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div>
+        <label for="playlist-select">Выберите плейлист:</label>
+        <select id="playlist-select" @bind="SelectedPlaylistId">
+            @if (Playlists != null && Playlists.Any())
+            {
+                @foreach (var playlist in Playlists)
+                {
+                    <option value="@playlist.Id">@playlist.Name</option>
+                }
+            }
+        </select>
+    </div>
+}
+
+@code {
+    private IEnumerable<Track>? Tracks;
+    private IEnumerable<Playlist>? Playlists;
+    private int SelectedPlaylistId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Получение данных о треках и плейлистах из базы данных
+        Tracks = await TrackService.GetAllTracksAsync();
+        Playlists = await PlaylistService.GetAllPlaylistsAsync();
+    }
+
+    private async void AddToPlaylist(Track track)
+    {
+        if (track != null && SelectedPlaylistId > 0)
+        {
+            await PlaylistService.AddTrackToPlaylistAsync(SelectedPlaylistId, track);
+        }
+    }
+}

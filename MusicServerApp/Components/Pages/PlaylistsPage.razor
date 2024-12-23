@@ -1,0 +1,49 @@
+﻿@page "/playlists"
+@inject IPlaylistService PlaylistService
+@inject NavigationManager NavigationManager
+
+<h1>Плейлисты</h1>
+
+<div>
+    @if (_playlists == null)
+    {
+        <p><em>Загрузка...</em></p>
+    }
+    else
+    {
+        foreach (var playlist in _playlists)
+        {
+            <div style="margin-bottom: 10px">
+                <a href="@($"/playlists/{playlist.Id}")">@playlist.Name</a>
+                <button @onclick="() => EditPlaylist(playlist)">Редактировать</button>
+                <button @onclick="() => DeletePlaylist(playlist)">Удалить</button>
+            </div>
+        }
+    }
+</div>
+
+<button @onclick="CreateNewPlaylist">Создать новый плейлист</button>
+
+@code {
+    private IEnumerable<Playlist> _playlists;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _playlists = await PlaylistService.GetAllPlaylistsAsync();
+    }
+
+    private void CreateNewPlaylist()
+    {
+        NavigationManager.NavigateTo("/add-edit-playlist");
+    }
+
+    private void EditPlaylist(Playlist playlist)
+    {
+        NavigationManager.NavigateTo($"/add-edit-playlist/{playlist.Id}");
+    }
+
+    private void DeletePlaylist(Playlist playlist)
+    {
+        // Логика удаления плейлиста
+    }
+}
